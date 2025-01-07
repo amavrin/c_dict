@@ -7,16 +7,28 @@ dict *new_dict()
     return d;
 }
 
-bool dict_add(dict *d, char *key, char *value)
+int dict_add(dict *d, char *key, char *value)
 {
-    d->elems = realloc(d->elems, (d->size + 1) * sizeof(dict_elem));
-    if (!d->elems)
+    if (!d || !key || !value)
     {
-        return false;
+        return DICT_BAD_POINTER;
     }
+    if (dict_find(d, key))
+    {
+        if (!dict_del(d, key))
+        {
+            return DICT_OTHER_ERROR;
+        }
+    }
+    dict_elem *tmp = realloc(d->elems, (d->size + 1) * sizeof(dict_elem));
+    if (!tmp)
+    {
+        return DICT_ALLOC_ERROR;
+    }
+    d->elems = tmp;
     d->elems[d->size] = (dict_elem){.key = key, .value = value};
     d->size++;
-    return true;
+    return DICT_OK;
 }
 
 dict_elem *dict_find(dict *d, char *key)
@@ -62,4 +74,31 @@ void dict_print(dict *d)
         printf("  %s: %s\n", d->elems[i].key, d->elems[i].value);
     }
     printf("\n");
+}
+
+char *dict_get(dict *d, char *key)
+{
+    dict_elem *e = dict_find(d, key);
+    if (!e)
+    {
+        return NULL;
+    }
+    return e->value;
+}
+
+char *dict_error(int e)
+{
+    switch (e)
+    {
+    case DICT_OK:
+        return "DICT_OK";
+    case DICT_ALLOC_ERROR:
+        return "DICT_ALLOC_ERROR";
+    case DICT_BAD_POINTER:
+        return "DICT_BAD_POINTER";
+    case DICT_OTHER_ERROR:
+        return "DICT_OTHER_ERROR";
+    default:
+        return "UNKNOWN_ERROR";
+    }
 }
