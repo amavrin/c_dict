@@ -3,6 +3,8 @@
 dict *new_dict()
 {
     dict *d = malloc(sizeof(dict));
+    if (!d)
+        return NULL;
     *d = (dict){.elems = NULL, .size = 0};
     return d;
 }
@@ -26,7 +28,9 @@ int dict_add(dict *d, char *key, char *value)
         return DICT_ALLOC_ERROR;
     }
     d->elems = tmp;
-    d->elems[d->size] = (dict_elem){.key = key, .value = value};
+    d->elems[d->size] = (dict_elem){
+        .key = strndup(key, DICT_MAX_KEY),
+        .value = strndup(value, DICT_MAX_VALUE)};
     d->size++;
     return DICT_OK;
 }
