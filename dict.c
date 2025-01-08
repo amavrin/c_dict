@@ -15,7 +15,7 @@ dict *new_dict()
     return d;
 }
 
-int dict_add_capacity(dict *d)
+dict_error_code dict_add_capacity(dict *d)
 {
     dict_elem *tmp = realloc(d->elems, (d->capacity * 2) * sizeof(dict_elem));
     if (!tmp)
@@ -27,7 +27,7 @@ int dict_add_capacity(dict *d)
     return DICT_OK;
 }
 
-int dict_add(dict *d, char *key, char *value)
+dict_error_code dict_add(dict *d, char *key, char *value)
 {
     if (!d || !key || !value)
     {
@@ -106,7 +106,7 @@ char *dict_get(dict *d, char *key)
     return e->value;
 }
 
-char *dict_error(int e)
+char *dict_error(dict_error_code e)
 {
     switch (e)
     {
