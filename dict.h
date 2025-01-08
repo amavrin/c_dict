@@ -11,6 +11,7 @@ typedef enum
     DICT_OK,
     DICT_ALLOC_ERROR,
     DICT_BAD_POINTER,
+    DICT_NOT_FOUND,
     DICT_OTHER_ERROR
 } dict_error_code;
 
@@ -35,9 +36,9 @@ typedef struct dict
 dict *new_dict();
 dict_error_code dict_add(dict *d, char *key, char *value);
 dict_elem *dict_find(dict *d, char *key);
-bool dict_del(dict *d, char *key);
+dict_error_code dict_del(dict *d, char *key);
 void dict_print(dict *d);
-bool dict_free(dict *d);
+dict_error_code dict_free(dict *d);
 char *dict_get(dict *d, char *key);
 char *dict_error(dict_error_code e);
 

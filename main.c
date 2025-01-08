@@ -41,7 +41,7 @@ int main(void)
     }
     printf("key1: %s\n", e->value);
 
-    if (!dict_del(d, "key1"))
+    if (dict_del(d, "key1") != DICT_OK)
     {
         fprintf(stderr, "Failed to delete key1\n");
         return 1;
@@ -73,7 +73,7 @@ int main(void)
     for (int i = 0; i < 90; i++)
     {
         sprintf(nkey, "key%d", i);
-        if (!dict_del(d, nkey))
+        if (dict_del(d, nkey) != DICT_OK)
         {
             fprintf(stderr, "Failed to delete key: %s\n", nkey);
             return 1;
@@ -92,7 +92,9 @@ int main(void)
         }
     }
     printf("dict size: %d\ndict capacity: %d\n", d->size, d->capacity);
-    if (!dict_free(d))
+
+    err = dict_free(d);
+    if (err != DICT_OK)
     {
         fprintf(stderr, "Failed to free dict\n");
         return 1;

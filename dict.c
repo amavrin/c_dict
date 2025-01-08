@@ -35,9 +35,10 @@ dict_error_code dict_add(dict *d, char *key, char *value)
     }
     if (dict_find(d, key))
     {
-        if (!dict_del(d, key))
+        dict_error_code err = dict_del(d, key);
+        if (err != DICT_OK)
         {
-            return DICT_OTHER_ERROR;
+            return err;
         }
     }
     if (d->size == d->capacity)
@@ -67,25 +68,29 @@ dict_elem *dict_find(dict *d, char *key)
     return NULL;
 }
 
-bool dict_del(dict *d, char *key)
+dict_error_code dict_del(dict *d, char *key)
 {
     dict_elem *e = dict_find(d, key);
     if (!e)
     {
-        return false;
+        return DICT_NOT_FOUND;
     }
 
     int index = e - d->elems;
     d->elems[index] = d->elems[d->size - 1];
     d->size--;
-    return true;
+    return DICT_OK;
 }
 
-bool dict_free(dict *d)
+dict_error_code dict_free(dict *d)
 {
+    if (!d)
+    {
+        return DICT_BAD_POINTER;
+    }
     free(d->elems);
     free(d);
-    return true;
+    return DICT_OK;
 }
 
 void dict_print(dict *d)
@@ -105,7 +110,7 @@ char *dict_get(dict *d, char *key)
     {
         return NULL;
     }
-    return e->value;
+    return strdup(e->value);
 }
 
 char *dict_error(dict_error_code e)
