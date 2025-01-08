@@ -54,10 +54,8 @@ bool dict_del(dict *d, char *key)
         return false;
     }
 
-    for (int i = e - d->elems; i < d->size - 1; i++)
-    {
-        d->elems[i] = d->elems[i + 1];
-    }
+    int index = e - d->elems;
+    d->elems[index] = d->elems[d->size - 1];
     d->size--;
     return true;
 }
