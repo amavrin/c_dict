@@ -17,6 +17,10 @@ dict *new_dict()
 
 dict_error_code dict_add_capacity(dict *d)
 {
+    if (!d)
+    {
+        return DICT_BAD_POINTER;
+    }
     dict_elem *tmp = realloc(d->elems, (d->capacity * 2) * sizeof(dict_elem));
     if (!tmp)
     {
