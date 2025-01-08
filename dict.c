@@ -48,7 +48,9 @@ dict_error_code dict_add(dict *d, char *key, char *value)
         }
     }
     strncpy(d->elems[d->size].key, key, DICT_MAX_KEY);
+    d->elems[d->size].key[DICT_MAX_KEY - 1] = '\0';
     strncpy(d->elems[d->size].value, value, DICT_MAX_VALUE);
+    d->elems[d->size].value[DICT_MAX_VALUE - 1] = '\0';
     d->size++;
     return DICT_OK;
 }
