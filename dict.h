@@ -11,13 +11,13 @@
 #define DICT_BAD_POINTER 2
 #define DICT_OTHER_ERROR 3
 
-#define DICT_MAX_KEY 256
+#define DICT_MAX_KEY 32
 #define DICT_MAX_VALUE 256
 
 typedef struct dict_elem
 {
-    char *key;
-    char *value;
+    char key[DICT_MAX_KEY];
+    char value[DICT_MAX_VALUE];
 } dict_elem;
 
 typedef struct dict

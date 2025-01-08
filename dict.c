@@ -28,9 +28,8 @@ int dict_add(dict *d, char *key, char *value)
         return DICT_ALLOC_ERROR;
     }
     d->elems = tmp;
-    d->elems[d->size] = (dict_elem){
-        .key = strndup(key, DICT_MAX_KEY),
-        .value = strndup(value, DICT_MAX_VALUE)};
+    strncpy(d->elems[d->size].key, key, DICT_MAX_KEY);
+    strncpy(d->elems[d->size].value, value, DICT_MAX_VALUE);
     d->size++;
     return DICT_OK;
 }
@@ -39,7 +38,7 @@ dict_elem *dict_find(dict *d, char *key)
 {
     for (int i = 0; i < d->size; i++)
     {
-        if (strcmp(d->elems[i].key, key) == 0)
+        if (strncmp(d->elems[i].key, key, DICT_MAX_KEY) == 0)
         {
             return &d->elems[i];
         }
