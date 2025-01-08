@@ -57,6 +57,41 @@ int main(void)
     }
     printf("key2: %s\n", value);
 
+    char nkey[DICT_MAX_KEY];
+    char nvalue[DICT_MAX_VALUE];
+    for (int i = 0; i < 100; i++)
+    {
+        sprintf(nkey, "key%d", i);
+        sprintf(nvalue, "value%d", i);
+        err = dict_add(d, nkey, nvalue);
+        if (err != DICT_OK)
+        {
+            fprintf(stderr, "Failed to add key:value %s:%s, error: %s\n", nkey, nvalue, dict_error(err));
+            return 1;
+        }
+    }
+    for (int i = 0; i < 90; i++)
+    {
+        sprintf(nkey, "key%d", i);
+        if (!dict_del(d, nkey))
+        {
+            fprintf(stderr, "Failed to delete key: %s\n", nkey);
+            return 1;
+        }
+    }
+    dict_print(d);
+    for (int i = 0; i < 100; i++)
+    {
+        sprintf(nkey, "key%d", i);
+        sprintf(nvalue, "value%d", i);
+        err = dict_add(d, nkey, nvalue);
+        if (err != DICT_OK)
+        {
+            fprintf(stderr, "Failed to add key:value %s:%s, error: %s\n", nkey, nvalue, dict_error(err));
+            return 1;
+        }
+    }
+    printf("dict size: %d\ndict capacity: %d\n", d->size, d->capacity);
     if (!dict_free(d))
     {
         fprintf(stderr, "Failed to free dict\n");

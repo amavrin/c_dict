@@ -5,8 +5,26 @@ dict *new_dict()
     dict *d = malloc(sizeof(dict));
     if (!d)
         return NULL;
-    *d = (dict){.elems = NULL, .size = 0};
+    dict_elem *elems = malloc(DICT_INIT_CAPACITY * sizeof(dict_elem));
+    if (!elems)
+    {
+        free(d);
+        return NULL;
+    }
+    *d = (dict){.elems = elems, .size = 0, .capacity = DICT_INIT_CAPACITY};
     return d;
+}
+
+int dict_add_capacity(dict *d)
+{
+    dict_elem *tmp = realloc(d->elems, (d->capacity * 2) * sizeof(dict_elem));
+    if (!tmp)
+    {
+        return DICT_ALLOC_ERROR;
+    }
+    d->elems = tmp;
+    d->capacity *= 2;
+    return DICT_OK;
 }
 
 int dict_add(dict *d, char *key, char *value)
@@ -22,12 +40,13 @@ int dict_add(dict *d, char *key, char *value)
             return DICT_OTHER_ERROR;
         }
     }
-    dict_elem *tmp = realloc(d->elems, (d->size + 1) * sizeof(dict_elem));
-    if (!tmp)
+    if (d->size == d->capacity)
     {
-        return DICT_ALLOC_ERROR;
+        if (dict_add_capacity(d) != DICT_OK)
+        {
+            return DICT_ALLOC_ERROR;
+        }
     }
-    d->elems = tmp;
     strncpy(d->elems[d->size].key, key, DICT_MAX_KEY);
     strncpy(d->elems[d->size].value, value, DICT_MAX_VALUE);
     d->size++;

@@ -14,6 +14,8 @@
 #define DICT_MAX_KEY 32
 #define DICT_MAX_VALUE 256
 
+#define DICT_INIT_CAPACITY 16
+
 typedef struct dict_elem
 {
     char key[DICT_MAX_KEY];
@@ -24,6 +26,7 @@ typedef struct dict
 {
     dict_elem *elems;
     int size;
+    int capacity;
 } dict;
 
 dict *new_dict();
